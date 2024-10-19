@@ -8,10 +8,14 @@ from mmcv import Config, DictAction
 from mmcv.cnn import fuse_conv_bn
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 from mmcv.runner import get_dist_info, init_dist, load_checkpoint
-from pomnet import *  # noqa
-from pomnet.apis import train_model
-from pomnet.datasets import build_dataset
+from scape import *  # noqa
+from scape.datasets import build_dataset
 
+
+from mmpose.apis import multi_gpu_test, single_gpu_test
+from mmpose.core import wrap_fp16_model
+from mmpose.datasets import build_dataloader
+from mmpose.models import build_posenet
 
 from mmpose.apis import multi_gpu_test, single_gpu_test
 from mmpose.core import wrap_fp16_model
@@ -113,6 +117,7 @@ def main():
     if fp16_cfg is not None:
         wrap_fp16_model(model)
     load_checkpoint(model, args.checkpoint, map_location='cpu')
+
 
     if args.fuse_conv_bn:
         model = fuse_conv_bn(model)
